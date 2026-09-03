@@ -1,0 +1,10 @@
+.error {
+  color: crimson;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

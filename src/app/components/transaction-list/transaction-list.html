@@ -1,0 +1,30 @@
+<h2>Transactions</h2>
+
+<ul>
+  @for (transaction of transactions; track transaction.id) {
+    <li
+    [class.income]="transaction.type === 'income'"
+    [class.expense]="transaction.type === 'expense'"
+    >
+    <div>
+        <strong>{{ transaction.title }}</strong>
+        <span>{{ transaction.category }}</span>
+        <span>{{ transaction.date | date: 'mediumDate' }}</span>
+    </div>
+    
+    <span>
+        @if (transaction.type === 'income'){
+            +
+        } @else {
+            -
+        }
+        {{ transaction.amount | currency }}
+    </span>
+
+     <button type="button" (click)="deleteTransaction(transaction.id)">
+            Delete
+        </button>
+
+    </li>
+  }
+</ul>

@@ -1,0 +1,29 @@
+<h1>Finance Tracker</h1>
+<p>Track income, expenses, and monthly progress.</p>
+
+<app-summary-cards 
+[totalIncome]="getTotalIncome()"
+[totalExpenses]="getTotalExpenses()"
+[balance]="getBalance()"
+></app-summary-cards>
+
+<app-transaction-form (transactionAdded)="addTransaction($event)"></app-transaction-form>
+
+<section>
+    <h2>Filter</h2>
+
+    <button type="button" (click)="setSelectedFilterType('all')">
+        All
+    </button>
+
+    <button type="button" (click)="setSelectedFilterType('income')">
+        Income
+    </button>
+
+    <button type="button" (click)="setSelectedFilterType('expense')">
+        Expense
+    </button>
+</section>
+
+<app-transaction-list [transactions]="getFilteredTransactions()"
+                    (transactionDeleted)="deleteTransaction($event)"></app-transaction-list>

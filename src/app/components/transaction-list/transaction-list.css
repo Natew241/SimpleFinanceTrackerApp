@@ -1,0 +1,33 @@
+ul {
+  list-style: none;
+  padding: 0;
+  max-width: 500px;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+}
+
+li div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+span {
+  color: #666;
+}
+
+.income {
+  border-left: 5px solid green;
+}
+
+.expense {
+  border-left: 5px solid crimson;
+}

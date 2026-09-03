@@ -1,0 +1,79 @@
+<h2>Add Transaction</h2>
+
+<form #transactionForm="ngForm" (ngSubmit)="addTransaction(transactionForm)">
+    <label>
+        Title 
+        <input
+            type="text"
+            name="title"
+            required
+            #titleInput="ngModel"
+            [(ngModel)]="title"
+        />
+    </label>
+
+    @if (titleInput.invalid && titleInput.touched){
+        <p class="error">Title is required.</p>
+    }
+
+    <label>
+        Amount 
+        <input
+            type="number"
+            name="amount"
+            min="0.01"
+            #amountInput="ngModel"
+            [(ngModel)]="amount"
+        />
+    </label>
+
+    @if (amountInput.invalid && amountInput.touched){
+        <p class="error">Amount must be greater than 0.</p>
+    }
+
+    <label>
+        Type 
+        <select
+            name="type"
+            required
+            [(ngModel)]="type"
+        >
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+        </select>
+    </label>
+
+    <label>
+        Category 
+        <input
+            type="text"
+            name="category"
+            required
+            #categoryInput="ngModel"
+            [(ngModel)]="category"
+        />
+    </label>
+
+    @if (categoryInput.invalid && categoryInput.touched){
+        <p class="error">Category is required.</p>
+    }
+
+    <label>
+        Date 
+        <input
+            type="date"
+            name="date"
+            required
+            #dateInput="ngModel"
+            [(ngModel)]="date"
+        />
+    </label>
+
+    @if (dateInput.invalid && dateInput.touched){
+        <p class="error">Date is required</p>
+    }
+
+    <button type="submit" 
+            [disabled]="transactionForm.invalid"
+            >Add Transaction</button>
+</form>
