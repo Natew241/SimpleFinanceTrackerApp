@@ -12,11 +12,22 @@ export class TransactionForm {
 
   @Output() transactionAdded = new EventEmitter<Transaction>();
 
+  categories = [
+    'Salary',
+    'Food',
+    'Utilities',
+    'Transportation',
+    'Entertainment',
+    'Health',
+    'Shopping',
+    'Other',
+  ]
+
   title = '';
   amount = 0;
   type: TransactionType = 'expense';
-  category = '';
-  date = '';
+  category = 'Food';
+  date = this.getToday();
 
   addTransaction(form: NgForm): void {
     const newTransaction: Transaction = {
@@ -34,8 +45,12 @@ export class TransactionForm {
       title: '',
       amount: 0,
       type: 'expense',
-      category: '',
-      date: '',
+      category: 'Food',
+      date: this.getToday(),
     });
+  }
+
+  getToday(): string {
+    return new Date().toISOString().split('T')[0];
   }
 }

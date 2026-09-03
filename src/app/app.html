@@ -1,49 +1,68 @@
-<h1>Finance Tracker</h1>
-<p>Track income, expenses, and monthly progress.</p>
+<main class="app-shell">
+    <header class="page-header">
+        <h1>Finance Tracker</h1>
+        <p>Track income, expenses, and monthly progress.</p>
+    </header>
 
-<app-summary-cards 
-[totalIncome]="getTotalIncome()"
-[totalExpenses]="getTotalExpenses()"
-[balance]="getBalance()"
-></app-summary-cards>
+    <app-summary-cards 
+    [totalIncome]="getTotalIncome()"
+    [totalExpenses]="getTotalExpenses()"
+    [balance]="getBalance()"
+    ></app-summary-cards>
 
-<app-transaction-form (transactionAdded)="addTransaction($event)"></app-transaction-form>
+    <app-transaction-form 
+    (transactionAdded)="addTransaction($event)">
+    </app-transaction-form>
 
-<section class="filters">
-    <h2>Filter</h2>
+    <section class="filters">
+        <h2>Filter</h2>
 
-    <button type="button" 
-    [class.active]="selectedTypeFilter === 'all'"
-    (click)="setSelectedFilterType('all')">
-        All
-    </button>
+        <button type="button" 
+        [class.active]="selectedTypeFilter === 'all'"
+        (click)="setSelectedFilterType('all')">
+            All
+        </button>
 
-    <button type="button" 
-    [class.active]="selectedTypeFilter === 'income'"
-    (click)="setSelectedFilterType('income')">
-        Income
-    </button>
+        <button type="button" 
+        [class.active]="selectedTypeFilter === 'income'"
+        (click)="setSelectedFilterType('income')">
+            Income
+        </button>
 
-    <button type="button" 
-    [class.active]="selectedTypeFilter === 'expense'"
-    (click)="setSelectedFilterType('expense')">
-        Expense
-    </button>
+        <button type="button" 
+        [class.active]="selectedTypeFilter === 'expense'"
+        (click)="setSelectedFilterType('expense')">
+            Expense
+        </button>
 
-    <label>
-        Category
-        <select
-        [value]="selectedCategoryFilter"
-        (change)="setSelectedCategory($any($event.target).value)"
-        >
-        <option value="all">All Categories</option>
+        <label>
+            Category
+            <select
+            [value]="selectedCategoryFilter"
+            (change)="setSelectedCategory($any($event.target).value)"
+            >
+            <option value="all">All Categories</option>
 
-        @for (category of getCategories(); track category) {
-            <option [value]="category">{{ category }}</option>
-        }
-    </select>
-    </label>
-</section>
+            @for (category of getCategories(); track category) {
+                <option [value]="category">{{ category }}</option>
+            }
+        </select>
+        </label>
 
-<app-transaction-list [transactions]="getFilteredTransactions()"
-                    (transactionDeleted)="deleteTransaction($event)"></app-transaction-list>
+        <label>
+            Month
+            <select
+            [value]="selectedMonthFilter"
+            (change)="setSelectedMonth($any($event.target).value)"
+            >
+            <option value="all">All Months</option>
+            @for (month of getMonths(); track month) {
+                <option [value]="month">{{ month }}</option>
+            }
+            </select>
+        </label>
+    </section>
+
+    <app-transaction-list [transactions]="getFilteredTransactions()"
+                        (transactionDeleted)="deleteTransaction($event)"></app-transaction-list>
+</main>

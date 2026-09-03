@@ -31,3 +31,8 @@ span {
 .expense {
   border-left: 5px solid crimson;
 }
+
+.empty-state {
+  color: #666;
+  font-style: italic;
+}

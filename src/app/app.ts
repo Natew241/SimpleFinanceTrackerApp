@@ -42,12 +42,18 @@ export class App {
 
   selectedCategoryFilter = 'all';
 
+  selectedMonthFilter = 'all';
+
   setSelectedFilterType(type: TransactionFilterType): void {
     this.selectedTypeFilter = type;
   }
 
   setSelectedCategory(category: string): void {
     this.selectedCategoryFilter = category
+  }
+
+  setSelectedMonth(month: string): void {
+    this.selectedMonthFilter = month;
   }
 
   getFilteredTransactions(): Transaction[] {
@@ -58,7 +64,10 @@ export class App {
       const matchesCategory =
       this.selectedCategoryFilter === 'all' || transaction.category === this.selectedCategoryFilter;
 
-      return matchesType && matchesCategory
+      const mathcesMonth =
+      this.selectedMonthFilter === 'all' || transaction.date.startsWith(this.selectedMonthFilter);
+
+      return matchesType && matchesCategory && mathcesMonth
     });
   }
 
@@ -90,5 +99,9 @@ export class App {
 
   getCategories(): string[] {
     return [...new Set(this.transactions.map((transaction) => transaction.category))];
+  }
+
+  getMonths(): string[] {
+    return [...new Set(this.transactions.map((transaction) => transaction.date.slice(0, 7)))];
   }
 }
