@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject} from '@angular/core';
 import { Transaction, TransactionFilterType } from './models/transaction';
+import { TransactionService } from './services/transaction-service';
 import { TransactionList } from './components/transaction-list/transaction-list';
 import { SummaryCards } from './components/summary-cards/summary-cards';
 import { TransactionForm } from './components/transaction-form/transaction-form';
@@ -11,97 +12,63 @@ import { TransactionForm } from './components/transaction-form/transaction-form'
   templateUrl: './app.html',
 })
 export class App {
-  transactions: Transaction[] = [
-    {
-      id: 1,
-      title: 'Paycheck',
-      amount: 2500,
-      type: 'income',
-      category: 'Salary',
-      date: '2026-09-01',
-    },
-    {
-      id: 2,
-      title: 'Groceries',
-      amount: 82.45,
-      type: 'expense',
-      category: 'Food',
-      date: '2026-09-02',
-    },
-    {
-      id: 3,
-      title: 'Internet Bill',
-      amount: 65,
-      type: 'expense',
-      category: 'Utilities',
-      date: '2026-09-02',
-    },
-  ];
-
+  private transactionService = inject(TransactionService)
+  
   selectedTypeFilter: TransactionFilterType = 'all';
-
   selectedCategoryFilter = 'all';
-
   selectedMonthFilter = 'all';
 
   setSelectedFilterType(type: TransactionFilterType): void {
-    this.selectedTypeFilter = type;
-  }
+  this.selectedTypeFilter = type;
+}
 
-  setSelectedCategory(category: string): void {
-    this.selectedCategoryFilter = category
-  }
+setSelectedCategory(category: string): void {
+  this.selectedCategoryFilter = category;
+}
 
-  setSelectedMonth(month: string): void {
-    this.selectedMonthFilter = month;
-  }
-
-  getFilteredTransactions(): Transaction[] {
-    return this.transactions.filter((transaction) => {
-      const matchesType = 
-      this.selectedTypeFilter === 'all' || transaction.type === this.selectedTypeFilter;
-
-      const matchesCategory =
-      this.selectedCategoryFilter === 'all' || transaction.category === this.selectedCategoryFilter;
-
-      const mathcesMonth =
-      this.selectedMonthFilter === 'all' || transaction.date.startsWith(this.selectedMonthFilter);
-
-      return matchesType && matchesCategory && mathcesMonth
-    });
-  }
-
+setSelectedMonth(month: string): void {
+  this.selectedMonthFilter = month;
+}
 
   getTotalIncome(): number {
-    return this.transactions
-    .filter((transaction) => transaction.type === 'income')
-    .reduce((total, transaction) => total + transaction.amount, 0);
-  }
+  return this.transactionService.getTotalForTransactions(
+    this.getFilteredTransactions(),
+    'income'
+  );
+}
 
-  getTotalExpenses(): number {
-    return this.transactions
-    .filter((transaction) => transaction.type === 'expense')
-    .reduce((total, transaction) => total + transaction.amount, 0);
-  }
+getTotalExpenses(): number {
+  return this.transactionService.getTotalForTransactions(
+    this.getFilteredTransactions(),
+    'expense'
+  );
+}
 
-  getBalance(): number {
-    return this.getTotalIncome() - this.getTotalExpenses()
-  }
+getBalance(): number {
+  return this.getTotalIncome() - this.getTotalExpenses();
+}
 
-  addTransaction(transaction: Transaction): void {
-    this.transactions = [...this.transactions, transaction]
-  }
+  getFilteredTransactions(): Transaction[] {
+  return this.transactionService.getFilteredTransactions(
+    this.selectedTypeFilter,
+    this.selectedCategoryFilter,
+    this.selectedMonthFilter
+  );
+}
 
-  deleteTransaction(id: number): void {
-    this.transactions = this.transactions
-    .filter((transaction) => transaction.id !== id);
-  }
+getCategories(): string[] {
+  return this.transactionService.getCategories();
+}
 
-  getCategories(): string[] {
-    return [...new Set(this.transactions.map((transaction) => transaction.category))];
-  }
+getMonths(): string[] {
+  return this.transactionService.getMonths();
+}
 
-  getMonths(): string[] {
-    return [...new Set(this.transactions.map((transaction) => transaction.date.slice(0, 7)))];
-  }
+addTransaction(transaction: Transaction): void {
+  this.transactionService.addTransaction(transaction);
+}
+
+deleteTransaction(id: number): void {
+  this.transactionService.deleteTransaction(id);
+}
 }
