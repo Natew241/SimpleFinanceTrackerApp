@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import {Transaction, TransactionType} from '../../models/transaction';
 
@@ -8,9 +8,12 @@ import {Transaction, TransactionType} from '../../models/transaction';
   styleUrl: './transaction-form.css',
   templateUrl: './transaction-form.html',
 })
-export class TransactionForm {
+export class TransactionForm implements OnChanges {
 
+  @Input() transactionToEdit: Transaction | null = null;
   @Output() transactionAdded = new EventEmitter<Transaction>();
+  @Output() transactionUpdated = new EventEmitter<Transaction>();
+  @Output() editCanceled = new EventEmitter<void>();
 
   categories = [
     'Salary',
@@ -29,9 +32,19 @@ export class TransactionForm {
   category = 'Food';
   date = this.getToday();
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['transactionToEdit'] && this.transactionToEdit) {
+      this.title = this.transactionToEdit.title;
+      this.amount = this.transactionToEdit.amount;
+      this.type = this.transactionToEdit.type;
+      this.category = this.transactionToEdit.category;
+      this.date = this.transactionToEdit.date;
+    }
+  }
+
   addTransaction(form: NgForm): void {
     const newTransaction: Transaction = {
-      id: Date.now(),
+      id: this.transactionToEdit?.id ?? Date.now(),
       title: this.title,
       amount: this.amount,
       type: this.type,
@@ -39,8 +52,25 @@ export class TransactionForm {
       date: this.date,
     };
 
-    this.transactionAdded.emit(newTransaction);
+    if (this.transactionToEdit) {
+      this.transactionUpdated.emit(newTransaction);
+    } else {
+      this.transactionAdded.emit(newTransaction);
+    }
     
+    this.resetForm(form);
+  }
+
+  cancelEdit(form: NgForm): void {
+    this.editCanceled.emit();
+    this.resetForm(form);
+  }
+
+  getToday(): string {
+    return new Date().toISOString().split('T')[0];
+  }
+
+  private resetForm(form: NgForm): void {
     form.resetForm({
       title: '',
       amount: 0,
@@ -48,9 +78,5 @@ export class TransactionForm {
       category: 'Food',
       date: this.getToday(),
     });
-  }
-
-  getToday(): string {
-    return new Date().toISOString().split('T')[0];
   }
 }

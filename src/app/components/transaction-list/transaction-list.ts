@@ -12,8 +12,13 @@ export class TransactionList {
   @Input() transactions: Transaction[] = [];
 
   @Output() transactionDeleted = new EventEmitter<number>();
+  @Output() transactionEdited = new EventEmitter<Transaction>();
 
   deleteTransaction(id: number): void {
     this.transactionDeleted.emit(id)
+  }
+
+  editTransaction(transaction: Transaction): void {
+    this.transactionEdited.emit(transaction);
   }
 }

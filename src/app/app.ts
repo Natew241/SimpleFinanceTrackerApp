@@ -1,5 +1,5 @@
 import { Component, inject} from '@angular/core';
-import { Transaction, TransactionFilterType } from './models/transaction';
+import { Transaction, TransactionFilterType, CategoryTotal } from './models/transaction';
 import { TransactionService } from './services/transaction-service';
 import { TransactionList } from './components/transaction-list/transaction-list';
 import { SummaryCards } from './components/summary-cards/summary-cards';
@@ -17,6 +17,7 @@ export class App {
   selectedTypeFilter: TransactionFilterType = 'all';
   selectedCategoryFilter = 'all';
   selectedMonthFilter = 'all';
+  selectedTransaction: Transaction | null = null;
 
   setSelectedFilterType(type: TransactionFilterType): void {
   this.selectedTypeFilter = type;
@@ -44,6 +45,10 @@ getTotalExpenses(): number {
   );
 }
 
+getExpenseTotalByCategory(): CategoryTotal[] {
+  return this.transactionService.getExpenseTotalsByCategory(this.getFilteredTransactions());
+}
+
 getBalance(): number {
   return this.getTotalIncome() - this.getTotalExpenses();
 }
@@ -68,7 +73,24 @@ addTransaction(transaction: Transaction): void {
   this.transactionService.addTransaction(transaction);
 }
 
+editTransaction(transaction: Transaction): void {
+  this.selectedTransaction = transaction;
+}
+
+updateTransaction(transaction: Transaction): void {
+  this.transactionService.updateTransaction(transaction);
+  this.selectedTransaction = null;
+}
+
+cancelEdit(): void {
+  this.selectedTransaction = null;
+}
+
 deleteTransaction(id: number): void {
   this.transactionService.deleteTransaction(id);
+
+  if (this.selectedTransaction?.id === id) {
+    this.selectedTransaction = null;
+  }
 }
 }

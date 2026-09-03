@@ -1,4 +1,10 @@
-<h2>Add Transaction</h2>
+<h2>
+    @if (transactionToEdit) {
+        Edit Transaction
+    } @else {
+        Add Transaction
+    }
+</h2>
 
 <form 
     class="transaction-form"
@@ -82,5 +88,17 @@
 
     <button type="submit" 
             [disabled]="transactionForm.invalid"
-            >Add Transaction</button>
+            >
+        @if (transactionToEdit) {
+            Save Changes
+        } @else {
+            Add Transaction
+        }
+    </button>
+
+    @if (transactionToEdit) {
+        <button type="button" (click)="cancelEdit(transactionForm)">
+            Cancel
+        </button>
+    }
 </form>

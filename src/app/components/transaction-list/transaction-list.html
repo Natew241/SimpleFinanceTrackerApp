@@ -22,9 +22,13 @@
             {{ transaction.amount | currency }}
         </span>
 
+        <button type="button" (click)="editTransaction(transaction)">
+            Edit
+        </button>
+
         <button type="button" (click)="deleteTransaction(transaction.id)">
-                Delete
-            </button>
+            Delete
+        </button>
 
         </li>
     }

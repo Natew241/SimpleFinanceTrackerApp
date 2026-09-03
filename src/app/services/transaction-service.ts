@@ -1,5 +1,5 @@
 import { Service } from '@angular/core';
-import { Transaction, TransactionFilterType, TransactionType } from '../models/transaction';
+import { Transaction, TransactionFilterType, TransactionType, CategoryTotal } from '../models/transaction';
 
 @Service()
 export class TransactionService {
@@ -75,9 +75,32 @@ export class TransactionService {
       .reduce((total, transactions) => total + transactions.amount, 0)
   }
 
+  getExpenseTotalsByCategory(transactions: Transaction[]): CategoryTotal[] {
+    const totalsByCategory: Record<string, number> = {};
+
+    transactions
+    .filter((transaction) => transaction.type === 'expense')
+    .forEach((transaction) => {
+      const currentTotal = totalsByCategory[transaction.category] ?? 0;
+      totalsByCategory[transaction.category] = currentTotal + transaction.amount;
+    });
+
+    return Object.entries(totalsByCategory).map(([category, total]) => ({
+      category,
+      total
+    }));
+  }
+
   addTransaction(transaction: Transaction): void {
   this.transactions = [...this.transactions, transaction];
   this.saveTransactions();
+  }
+
+  updateTransaction(updatedTransaction: Transaction): void {
+    this.transactions = this.transactions.map((transaction) =>
+      transaction.id === updatedTransaction.id ? updatedTransaction : transaction
+    );
+    this.saveTransactions();
   }
 
   deleteTransaction(id: number): void {
