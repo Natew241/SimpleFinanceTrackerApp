@@ -40,17 +40,26 @@ export class App {
 
   selectedTypeFilter: TransactionFilterType = 'all';
 
+  selectedCategoryFilter = 'all';
+
   setSelectedFilterType(type: TransactionFilterType): void {
     this.selectedTypeFilter = type;
   }
 
-  getFilteredTransactions(): Transaction[] {
-    if (this.selectedTypeFilter === 'all'){
-      return this.transactions;
-    }
+  setSelectedCategory(category: string): void {
+    this.selectedCategoryFilter = category
+  }
 
-    return this.transactions
-      .filter((transaction) => transaction.type === this.selectedTypeFilter);
+  getFilteredTransactions(): Transaction[] {
+    return this.transactions.filter((transaction) => {
+      const matchesType = 
+      this.selectedTypeFilter === 'all' || transaction.type === this.selectedTypeFilter;
+
+      const matchesCategory =
+      this.selectedCategoryFilter === 'all' || transaction.category === this.selectedCategoryFilter;
+
+      return matchesType && matchesCategory
+    });
   }
 
 
@@ -77,5 +86,9 @@ export class App {
   deleteTransaction(id: number): void {
     this.transactions = this.transactions
     .filter((transaction) => transaction.id !== id);
+  }
+
+  getCategories(): string[] {
+    return [...new Set(this.transactions.map((transaction) => transaction.category))];
   }
 }

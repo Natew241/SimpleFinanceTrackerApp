@@ -1,0 +1,28 @@
+.filters {
+  margin-bottom: 24px;
+}
+
+.filters button {
+  margin-right: 8px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.filters button.active {
+  background: #222;
+  color: white;
+  border-color: #222;
+}
+
+.filters label {
+  display: block;
+  margin-top: 12px;
+}
+
+.filters select {
+  margin-left: 8px;
+  padding: 8px;
+}

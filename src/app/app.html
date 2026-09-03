@@ -9,20 +9,40 @@
 
 <app-transaction-form (transactionAdded)="addTransaction($event)"></app-transaction-form>
 
-<section>
+<section class="filters">
     <h2>Filter</h2>
 
-    <button type="button" (click)="setSelectedFilterType('all')">
+    <button type="button" 
+    [class.active]="selectedTypeFilter === 'all'"
+    (click)="setSelectedFilterType('all')">
         All
     </button>
 
-    <button type="button" (click)="setSelectedFilterType('income')">
+    <button type="button" 
+    [class.active]="selectedTypeFilter === 'income'"
+    (click)="setSelectedFilterType('income')">
         Income
     </button>
 
-    <button type="button" (click)="setSelectedFilterType('expense')">
+    <button type="button" 
+    [class.active]="selectedTypeFilter === 'expense'"
+    (click)="setSelectedFilterType('expense')">
         Expense
     </button>
+
+    <label>
+        Category
+        <select
+        [value]="selectedCategoryFilter"
+        (change)="setSelectedCategory($any($event.target).value)"
+        >
+        <option value="all">All Categories</option>
+
+        @for (category of getCategories(); track category) {
+            <option [value]="category">{{ category }}</option>
+        }
+    </select>
+    </label>
 </section>
 
 <app-transaction-list [transactions]="getFilteredTransactions()"
